@@ -17,7 +17,7 @@ supports both mouse and keyboard, courtesy of Terminal.Gui
 
 ## Some notes
 
-Playlists are handled as folders, with the default folder being ./DefaultSongFolder. If you want to have multiple playlists, you need to create new folders with the songs in them (location doesn't matter) and navigate to them through the UI. Empty playlists are not allowed and will stop the application. If your solution folder is not on your C:\ drive, the program will not run.
+Playlists are handled as folders, with the default folder being ./DefaultSongFolder. If you want to have multiple playlists, you need to create new folders with the songs in them (location doesn't matter) and navigate to them through the UI.
 
 ## Youtube audio download UI
 If you want to use the youtube audio download feature, you need yt-dlp (https://github.com/yt-dlp/yt-dlp).

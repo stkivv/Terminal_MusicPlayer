@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
+using Domain;
 using ProcessStartInfo = System.Diagnostics.ProcessStartInfo;
 
 namespace DAL;
 
 public class OptionsRepo
 {
-    private string _url = "C:\\Terminal_MusicPlayer\\DAL\\AppOptions.csv";
+    private string _url = "..\\..\\..\\..\\DAL\\AppOptions.csv";
     
     public string GetTheme()
     {
@@ -84,6 +85,25 @@ public class OptionsRepo
             _ => false
         };
     }
+    
+    public string GetOrderByOption()
+    {
+        var lines = File.ReadAllLines(_url);
+        var current = lines[4].Split(",")[1];
+        return current;
+    }
+    
+    public void SaveOrderByOption(string orderBy)
+    {
+        if (orderBy is not ("ALBUM" or "TITLE" or "ARTIST"))
+        {
+            return;
+        }
+        var lines = File.ReadAllLines(_url);
+        lines[4] = $"OrderBy,{orderBy}";
+        File.WriteAllLines(_url, lines);
+    }
+
 
     public static void AddSong(string url, string playlistPath)
     {

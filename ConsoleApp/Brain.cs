@@ -30,8 +30,8 @@ public class Brain : IObservable<TimeSpan>
         OptionsRepository = optionsRepo;
         Repeat = optionsRepo.GetRepeatOption();
         Shuffle = optionsRepo.GetShuffleOption();
-        Songs = Repo.GetSongs();
-        SelectedSong = Songs[0];
+        Songs = Repo.GetSongs(optionsRepo.GetOrderByOption());
+        SelectedSong = Songs.Count >= 1 ? Songs[0] : new Song();
     }
 
     public void ChangeSong(Song? song )

@@ -11,9 +11,13 @@ public class MusicRepo
     
     public string URL { get; set; }
 
-    public List<Song> GetSongs()
+    public List<Song> GetSongs(string? orderBy)
     {
         var dirFiles = Directory.GetFiles(URL);
+        if (dirFiles.Length < 1)
+        {
+            return new List<Song>();
+        }
         return (from i in dirFiles
             let tFile = TagLib.File.Create(i)
             select new Song
@@ -23,6 +27,12 @@ public class MusicRepo
                 FileLink = i,
                 Title = tFile.Tag.Title ?? tFile.Name.Split("\\").Last(),
                 Album = tFile.Tag.Album ?? "???"
-            }).OrderBy(s => s.Album).ToList();
+            }).OrderBy(s => orderBy switch
+        {
+            "ALBUM" => s.Album,
+            "TITLE" => s.Title,
+            "ARTIST" => s.Artist,
+            _ => s.Album
+        }).ToList();
     }
 }

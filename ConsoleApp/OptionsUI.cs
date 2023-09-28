@@ -61,8 +61,16 @@ public class OptionsUI
             var songAddDialog = GetSongAddDialog();
             Application.Run(songAddDialog);
         };
+        
+        var changeOrderingButton = new Button("change song order");
+        changeOrderingButton.Clicked += () =>
+        {
+            var changeOrderingDialog = GetOrderingDialog();
+            Application.Run(changeOrderingDialog);
+        };
  
         optionsDialog.AddButton(themeButton);
+        optionsDialog.AddButton(changeOrderingButton);
         optionsDialog.AddButton(playListButton);
         optionsDialog.AddButton(songAddButton);
 
@@ -124,7 +132,7 @@ public class OptionsUI
         {
             Application.MainLoop.Invoke(async () =>
             {
-                var originalCount = _musicRepo.GetSongs().Count;
+                var originalCount = _musicRepo.GetSongs(null).Count;
                 dialog.Text = "please wait...";
                 Task.Run(() => OnConfirmSongAdd(textField.Text.ToString()!)).Wait();
                 //await Task.Delay(4000);
@@ -136,6 +144,32 @@ public class OptionsUI
 
         dialog.Add(textField);
         dialog.AddButton(confirm);
+
+        return dialog;
+    }
+    
+    private Dialog GetOrderingDialog()
+    {
+        var dialog = new Dialog()
+        {
+            Title = "Choose what the song order is based on (will restart app)",
+            ButtonAlignment = Dialog.ButtonAlignments.Center,
+            ColorScheme = _colorScheme,
+            Width = Dim.Percent(50),
+            Height = Dim.Percent(50),
+            AutoSize = true
+        };
+
+        var list = new List<string>() { "ALBUM", "ARTIST", "TITLE"};
+        var listView = new ListView(list)
+        {
+            Width = Dim.Fill(),
+            Height = Dim.Fill(),
+        };
+
+        listView.OpenSelectedItem += OnOrderingSelect;
+
+        dialog.Add(listView);
 
         return dialog;
     }
@@ -214,6 +248,16 @@ public class OptionsUI
         Application.MainLoop.Invoke(() =>
         {
             _optionsRepo.ChangeTheme(name);
+            RestartApp();
+        });
+    }
+    
+    private void OnOrderingSelect(ListViewItemEventArgs args)
+    {
+        string name = (string) args.Value;
+        Application.MainLoop.Invoke(() =>
+        {
+            _optionsRepo.SaveOrderByOption(name);
             RestartApp();
         });
     }

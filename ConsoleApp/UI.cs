@@ -224,7 +224,12 @@ public class UI
 
         AddLabelToSongList(win);
 
-        _songs = _brain.Repo.GetSongs();
+        _songs = _brain.Repo.GetSongs(_optionsRepo.GetOrderByOption());
+
+        if (_songs.Count < 1)
+        {
+            return DisplayPlaylistError();
+        }
         
         var listView = new ListView(_songs){
             X = 0,
@@ -238,6 +243,17 @@ public class UI
         win.Add(listView);
 
         return win;
+    }
+
+    private static Window DisplayPlaylistError()
+    {
+        return new Window("ERROR - PLAYLIST EMPTY/PLAYLIST PATH INCORRECT")
+        {
+            X = 0,
+            Y = 3,
+            Width = Dim.Percent(100),
+            Height = Dim.Percent(80) - 4
+        };
     }
 
     private Window InitSearchbar( Window songsWin)
